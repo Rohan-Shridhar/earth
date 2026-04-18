@@ -35,9 +35,11 @@
           <!-- Ocean base -->
           <circle id="ocean" cx="130" cy="130" r="122"/>
           <!-- Atmosphere glow ring -->
-          <circle id="atmo" cx="130" cy="130" r="122" fill="none" stroke="rgba(80,160,255,0.2)" stroke-width="8"/>
+          <circle id="atmo" cx="130" cy="130" r="122" fill="none" stroke="rgba(80,180,255,0.25)" stroke-width="14"/>
           <!-- Land patches -->
           <g clip-path="url(#clip)" id="land-group"></g>
+          <!-- Clouds -->
+          <g clip-path="url(#clip)" id="cloud-group"></g>
           <!-- Ice caps -->
           <g clip-path="url(#clip)" id="ice-group"></g>
           <!-- Pollution smog -->
@@ -55,11 +57,12 @@
       </div>
 
       <div class="score-panel">
-        <div class="score-number" id="score-number">100</div>
+        <div class="score-number" id="score-number">1000</div>
         <div class="score-bar-wrap">
           <div class="score-bar-fill" id="score-bar" style="width:100%"></div>
         </div>
-        <div class="condition-label" id="condition-label">Thriving Paradise</div>
+        <div class="condition-label">Persons Alive</div>
+        <div class="status-label" id="status-label">Thriving Paradise</div>
       </div>
 
       <div class="event-box" id="event-box">
