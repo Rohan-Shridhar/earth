@@ -1,128 +1,246 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Earth Condition Simulator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="style.css"/>
-</head>
-<body>
-<div id="app">
-  <header class="header">
-    <div class="header-sub">Interactive Climate Model v1.0</div>
-    <h1 class="header-title">Earth Condition Simulator</h1>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Earth Condition Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <div class="header-sub">Interactive Climate Model v1.0</div>
+        <h1 class="header-title">Earth Condition Simulator</h1>
+      </header>
 
-  <div class="main-layout">
-    <!-- Left: Globe + Score + Events -->
-    <div class="globe-section">
-      <div class="globe-outer">
-        <svg id="globe-svg" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <clipPath id="clip"><circle cx="130" cy="130" r="122"/></clipPath>
-            <radialGradient id="gloss" cx="35%" cy="30%">
-              <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
-              <stop offset="60%" stop-color="rgba(255,255,255,0)"/>
-            </radialGradient>
-            <radialGradient id="shadow" cx="65%" cy="70%">
-              <stop offset="0%" stop-color="rgba(0,0,0,0)"/>
-              <stop offset="100%" stop-color="rgba(0,0,0,0.4)"/>
-            </radialGradient>
-          </defs>
-          <!-- Ocean base -->
-          <circle id="ocean" cx="130" cy="130" r="122"/>
-          <!-- Atmosphere glow ring -->
-          <circle id="atmo" cx="130" cy="130" r="122" fill="none" stroke="rgba(80,180,255,0.25)" stroke-width="14"/>
-          <!-- Land patches -->
-          <g clip-path="url(#clip)" id="land-group"></g>
-          <!-- Clouds -->
-          <g clip-path="url(#clip)" id="cloud-group"></g>
-          <!-- Ice caps -->
-          <g clip-path="url(#clip)" id="ice-group"></g>
-          <!-- Pollution smog -->
-          <g clip-path="url(#clip)" id="smog-group"></g>
-          <!-- Fires -->
-          <g clip-path="url(#clip)" id="fire-group"></g>
-          <!-- Gloss overlay -->
-          <circle cx="130" cy="130" r="122" fill="url(#gloss)"/>
-          <circle cx="130" cy="130" r="122" fill="url(#shadow)"/>
-          <!-- Outline -->
-          <circle cx="130" cy="130" r="122" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-        </svg>
-        <div class="pulse-ring" id="ring1" style="width:260px;height:260px;"></div>
-        <div class="pulse-ring" id="ring2" style="width:260px;height:260px;"></div>
-      </div>
+      <div class="main-layout">
+        <!-- Left: Globe + Score + Events -->
+        <div class="globe-section">
+          <div class="globe-outer">
+            <svg
+              id="globe-svg"
+              viewBox="0 0 260 260"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <clipPath id="clip">
+                  <circle cx="130" cy="130" r="122" />
+                </clipPath>
+                <radialGradient id="gloss" cx="35%" cy="30%">
+                  <stop offset="0%" stop-color="rgba(255,255,255,0.18)" />
+                  <stop offset="60%" stop-color="rgba(255,255,255,0)" />
+                </radialGradient>
+                <radialGradient id="shadow" cx="65%" cy="70%">
+                  <stop offset="0%" stop-color="rgba(0,0,0,0)" />
+                  <stop offset="100%" stop-color="rgba(0,0,0,0.4)" />
+                </radialGradient>
+              </defs>
+              <!-- Ocean base -->
+              <circle id="ocean" cx="130" cy="130" r="122" />
+              <!-- Atmosphere glow ring -->
+              <circle
+                id="atmo"
+                cx="130"
+                cy="130"
+                r="122"
+                fill="none"
+                stroke="rgba(80,180,255,0.25)"
+                stroke-width="14"
+              />
+              <!-- Land patches -->
+              <g clip-path="url(#clip)" id="land-group"></g>
+              <!-- Clouds -->
+              <g clip-path="url(#clip)" id="cloud-group"></g>
+              <!-- Ice caps -->
+              <g clip-path="url(#clip)" id="ice-group"></g>
+              <!-- Pollution smog -->
+              <g clip-path="url(#clip)" id="smog-group"></g>
+              <!-- Fires -->
+              <g clip-path="url(#clip)" id="fire-group"></g>
+              <!-- Gloss overlay -->
+              <circle cx="130" cy="130" r="122" fill="url(#gloss)" />
+              <circle cx="130" cy="130" r="122" fill="url(#shadow)" />
+              <!-- Outline -->
+              <circle
+                cx="130"
+                cy="130"
+                r="122"
+                fill="none"
+                stroke="rgba(255,255,255,0.08)"
+                stroke-width="1"
+              />
+            </svg>
+            <div
+              class="pulse-ring"
+              id="ring1"
+              style="width: 260px; height: 260px"
+            ></div>
+            <div
+              class="pulse-ring"
+              id="ring2"
+              style="width: 260px; height: 260px"
+            ></div>
+          </div>
 
-      <div class="score-panel">
-        <div class="score-number" id="score-number">1000</div>
-        <div class="score-bar-wrap">
-          <div class="score-bar-fill" id="score-bar" style="width:100%"></div>
+          <div class="score-panel">
+            <div class="score-number" id="score-number">1000</div>
+            <div id="realtime-pop" class="realtime-pop">8,200,000,000</div>
+            <div class="score-bar-wrap">
+              <div
+                class="score-bar-fill"
+                id="score-bar"
+                style="width: 100%"
+              ></div>
+            </div>
+            <div class="condition-label">Earth Health</div>
+            <div class="status-label" id="status-label">Thriving Paradise</div>
+          </div>
+
+          <div class="event-box" id="event-box">
+            Adjust the sliders to change Earth's fate...
+          </div>
         </div>
-        <div class="condition-label">Persons Alive</div>
-        <div class="status-label" id="status-label">Thriving Paradise</div>
+
+        <!-- Right: Sliders -->
+        <div class="sliders-panel">
+          <div class="slider-card">
+            <div class="slider-header">
+              <div class="slider-name">
+                <span class="icon">🌡️</span> Temperature
+              </div>
+              <div class="slider-val" id="v-temp">+0°C</div>
+            </div>
+            <input
+              type="range"
+              min="-2"
+              max="10"
+              value="0"
+              step="1"
+              id="s-temp"
+            />
+          </div>
+          <div class="slider-card">
+            <div class="slider-header">
+              <div class="slider-name">
+                <span class="icon">🌊</span> Sea Level
+              </div>
+              <div class="slider-val" id="v-sea">+0m</div>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              value="0"
+              step="1"
+              id="s-sea"
+            />
+          </div>
+          <div class="slider-card">
+            <div class="slider-header">
+              <div class="slider-name">
+                <span class="icon">🌲</span> Forest Cover
+              </div>
+              <div class="slider-val" id="v-forest">100%</div>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="100"
+              step="5"
+              id="s-forest"
+            />
+          </div>
+          <div class="slider-card">
+            <div class="slider-header">
+              <div class="slider-name">
+                <span class="icon">☢️</span> Pollution
+              </div>
+              <div class="slider-val" id="v-poll">0%</div>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="0"
+              step="5"
+              id="s-poll"
+            />
+          </div>
+          <div class="slider-card">
+            <div class="slider-header">
+              <div class="slider-name">
+                <span class="icon">🧊</span> Ice Caps
+              </div>
+              <div class="slider-val" id="v-ice">100%</div>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="100"
+              step="5"
+              id="s-ice"
+            />
+          </div>
+          <div class="slider-card">
+            <div class="slider-header">
+              <div class="slider-name">
+                <span class="icon">⚡</span> Clean Energy
+              </div>
+              <div class="slider-val" id="v-energy">100%</div>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="100"
+              step="5"
+              id="s-energy"
+            />
+          </div>
+          <button class="sim-btn" id="run-sim-btn" onclick="runSimulation()">
+            ⚡ Simulate 10 Years
+          </button>
+        </div>
       </div>
 
-      <div class="event-box" id="event-box">
-        Adjust the sliders to change Earth's fate...
+      <div id="sim-panel" class="sim-overlay">
+        <div class="sim-content">
+          <header class="sim-header">
+            <div class="sim-title">10-Year Projection</div>
+            <div class="sim-subtitle">Human Survival Impact Analysis</div>
+          </header>
+          <div class="sim-stats">
+            <div class="stat-card">
+              <label>Initial</label>
+              <div class="stat-val">8.20B</div>
+            </div>
+            <div class="stat-card highlight">
+              <label>Projected</label>
+              <div class="stat-val" id="final-pop">--</div>
+            </div>
+          </div>
+          <div class="year-grid" id="year-grid"></div>
+          <div class="sim-verdict" id="sim-verdict"></div>
+          <button class="reset-sim-btn" onclick="closeSimulation()">
+            Back
+          </button>
+        </div>
+      </div>
+
+      <div class="bottom-bar">
+        <div class="bottom-tip">Build for the Planet · Earth Day 2026</div>
+        <button class="reset-btn" onclick="resetAll()">↺ Reset Earth</button>
       </div>
     </div>
 
-    <!-- Right: Sliders -->
-    <div class="sliders-panel">
-      <div class="slider-card">
-        <div class="slider-header">
-          <div class="slider-name"><span class="icon">🌡️</span> Temperature</div>
-          <div class="slider-val" id="v-temp">+0°C</div>
-        </div>
-        <input type="range" min="-2" max="10" value="0" step="1" id="s-temp"/>
-      </div>
-      <div class="slider-card">
-        <div class="slider-header">
-          <div class="slider-name"><span class="icon">🌊</span> Sea Level</div>
-          <div class="slider-val" id="v-sea">+0m</div>
-        </div>
-        <input type="range" min="0" max="10" value="0" step="1" id="s-sea"/>
-      </div>
-      <div class="slider-card">
-        <div class="slider-header">
-          <div class="slider-name"><span class="icon">🌲</span> Forest Cover</div>
-          <div class="slider-val" id="v-forest">100%</div>
-        </div>
-        <input type="range" min="0" max="100" value="100" step="5" id="s-forest"/>
-      </div>
-      <div class="slider-card">
-        <div class="slider-header">
-          <div class="slider-name"><span class="icon">☢️</span> Pollution</div>
-          <div class="slider-val" id="v-poll">0%</div>
-        </div>
-        <input type="range" min="0" max="100" value="0" step="5" id="s-poll"/>
-      </div>
-      <div class="slider-card">
-        <div class="slider-header">
-          <div class="slider-name"><span class="icon">🧊</span> Ice Caps</div>
-          <div class="slider-val" id="v-ice">100%</div>
-        </div>
-        <input type="range" min="0" max="100" value="100" step="5" id="s-ice"/>
-      </div>
-      <div class="slider-card">
-        <div class="slider-header">
-          <div class="slider-name"><span class="icon">⚡</span> Clean Energy</div>
-          <div class="slider-val" id="v-energy">100%</div>
-        </div>
-        <input type="range" min="0" max="100" value="100" step="5" id="s-energy"/>
-      </div>
-    </div>
-  </div>
-
-  <div class="bottom-bar">
-    <div class="bottom-tip">Built for DEV.to · Build for the Planet · Earth Day 2026</div>
-    <button class="reset-btn" onclick="resetAll()">↺ Reset Earth</button>
-  </div>
-</div>
-
-<script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

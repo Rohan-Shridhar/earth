@@ -29,6 +29,10 @@ const globeSvg   = document.getElementById('globe-svg');
 const ring1      = document.getElementById('ring1');
 const ring2      = document.getElementById('ring2');
 const cloudGroup = document.getElementById('cloud-group');
+const runSimBtn  = document.getElementById('run-sim-btn');
+const realtimePopEl = document.getElementById('realtime-pop');
+
+let totalPop = 8200000000;
 
 const CONTINENTS = [
   { 
@@ -168,6 +172,12 @@ function drawFrame() {
 
   globeSvg.style.filter = `drop-shadow(0 0 ${20 + (1 - (calcScore()/100)) * 30}px rgba(${scoreToCSSColor(calcScore())},0.45))`;
 
+  // Real-time population ticking
+  const yearlyRate = getAnnualGrowthRate() * 1000000;
+  const frameRate = yearlyRate / (365 * 24 * 60 * 60 * 60); // 60fps assumption
+  totalPop += frameRate;
+  realtimePopEl.textContent = Math.floor(totalPop).toLocaleString();
+
   animId = requestAnimationFrame(drawFrame);
 }
 
@@ -193,6 +203,24 @@ function calcScore() {
   s -= (100 - ice)    * 0.25;
   s -= (100 - energy) * 0.3;
   return Math.max(0, Math.min(100, Math.round(s)));
+}
+
+function getAnnualGrowthRate() {
+  const temp   = +S.temp.value;
+  const sea    = +S.sea.value;
+  const forest = +S.forest.value;
+  const poll   = +S.poll.value;
+  const ice    = +S.ice.value;
+  const energy = +S.energy.value;
+
+  let growth = 80; // Base +80M
+  growth -= (temp / 10) * 200;
+  growth -= (poll / 100) * 150;
+  growth -= (1 - forest / 100) * 100;
+  growth -= (sea / 10) * 80;
+  growth -= (1 - energy / 100) * 60;
+  growth -= (1 - ice / 100) * 40;
+  return growth;
 }
 
 const CONDITIONS = [
@@ -269,8 +297,8 @@ function update() {
   const score = calcScore();
   const cond  = CONDITIONS.find(c => score >= c.min) || CONDITIONS[CONDITIONS.length - 1];
 
-  const population = score * 10;
-  scoreNum.textContent  = population;
+  const earthHealth = score * 10;
+  scoreNum.textContent  = earthHealth;
   scoreNum.style.color  = cond.color;
   scoreBar.style.width  = score + '%';
   scoreBar.style.background = cond.color;
@@ -291,6 +319,11 @@ function update() {
     const pct = ((val - min) / (max - min)) * 100;
     el.style.background = `linear-gradient(to right, ${cond.color} ${pct}%, #111e2e ${pct}%)`;
   });
+
+  // Sync simulation button color
+  runSimBtn.style.borderColor = cond.color;
+  runSimBtn.style.color = cond.color;
+  runSimBtn.style.boxShadow = `0 0 20px ${cond.color}22`;
 }
 
 function resetAll() {
@@ -300,10 +333,90 @@ function resetAll() {
   S.poll.value   = 0;
   S.ice.value    = 100;
   S.energy.value = 100;
+  totalPop = 8200000000;
   update();
 }
 
 Object.values(S).forEach(s => s.addEventListener('input', update));
+
+function runSimulation() {
+  const temp   = +S.temp.value;
+  const sea    = +S.sea.value;
+  const forest = +S.forest.value;
+  const poll   = +S.poll.value;
+  const ice    = +S.ice.value;
+  const energy = +S.energy.value;
+
+  let currentPop = 8200; // In Millions (8.2B)
+  const history = [];
+
+  for (let i = 1; i <= 10; i++) {
+    let growth = 80; // Base +80M
+    growth -= (temp / 10) * 200;
+    growth -= (poll / 100) * 150;
+    growth -= (1 - forest / 100) * 100;
+    growth -= (sea / 10) * 80;
+    growth -= (1 - energy / 100) * 60;
+    growth -= (1 - ice / 100) * 40;
+    
+    currentPop += growth;
+    if (currentPop < 0) currentPop = 0;
+    history.push({ year: 2026 + i, pop: (currentPop / 1000).toFixed(2) + 'B' });
+  }
+
+  const finalPop = (currentPop / 1000).toFixed(2) + 'B';
+  const totalChange = (currentPop - 8200) / 1000;
+  
+  let verdictText = "";
+  let verdictClass = "";
+  if (totalChange > 0.2) {
+    verdictText = `Positive Outlook: Population grew by ${totalChange.toFixed(2)}B. Earth remains a thriving home for humanity.`;
+    verdictClass = "verdict-good";
+  } else if (totalChange >= -0.5) {
+    verdictText = `Stagnant Development: Population shifted by ${totalChange.toFixed(2)}B. Humanity is holding on, but resources are tight.`;
+    verdictClass = "verdict-warn";
+  } else {
+    verdictText = `Critical Alert: Catastrophic decline of ${Math.abs(totalChange).toFixed(2)}B. Severe environmental collapse has decimated the population.`;
+    verdictClass = "verdict-bad";
+  }
+
+  const verdictEl = document.getElementById('sim-verdict');
+  document.getElementById('final-pop').textContent = finalPop;
+  verdictEl.textContent = verdictText;
+  verdictEl.className = `sim-verdict ${verdictClass}`;
+  
+  const grid = document.getElementById('year-grid');
+  grid.innerHTML = history.map(h => `
+    <div class="year-item">
+      <span class="year-num">${h.year}</span>
+      <span class="year-val">${h.pop}</span>
+    </div>
+  `).join('');
+
+  // Lock button state during simulation
+  runSimBtn.textContent = "Simulating...";
+  runSimBtn.classList.add('simulating');
+
+  setTimeout(() => {
+    document.getElementById('sim-panel').classList.add('active');
+    
+    // Animation reveal
+    const items = grid.querySelectorAll('.year-item');
+    items.forEach((item, idx) => {
+      setTimeout(() => item.classList.add('show'), idx * 80);
+    });
+
+    // Reset button after reveal
+    setTimeout(() => {
+      runSimBtn.textContent = "⚡ Simulate 10 Years";
+      runSimBtn.classList.remove('simulating');
+    }, items.length * 80 + 500);
+  }, 1000);
+}
+
+function closeSimulation() {
+  document.getElementById('sim-panel').classList.remove('active');
+}
 
 update();
 drawFrame();
