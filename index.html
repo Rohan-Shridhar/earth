@@ -20,6 +20,14 @@
       </header>
 
       <div class="main-layout">
+        <div id="earth-day-banner" class="ed-banner-vertical">
+          <div class="ed-confetti-container" id="ed-confetti-container"></div>
+          <div class="ed-content" onclick="triggerConfetti()">
+            <div class="ed-title" id="ed-title"></div>
+            <div class="ed-subtitle">April 22<br><br>Build for the Planet</div>
+          </div>
+        </div>
+
         <!-- Left: Globe + Score + Events -->
         <div class="globe-section">
           <div class="globe-outer">
@@ -63,6 +71,36 @@
               <g clip-path="url(#clip)" id="smog-group"></g>
               <!-- Fires -->
               <g clip-path="url(#clip)" id="fire-group"></g>
+              <!-- Face Group -->
+              <g id="face-group">
+                <!-- Cheeks -->
+                <ellipse id="cheek-l" cx="95" cy="150" rx="12" ry="7" fill="rgba(255,100,150,0.5)" />
+                <ellipse id="cheek-r" cx="165" cy="150" rx="12" ry="7" fill="rgba(255,100,150,0.5)" />
+
+                <!-- Left Eye -->
+                <ellipse id="eye-bg-l" cx="100" cy="130" rx="14" ry="14" fill="white"/>
+                <path id="eye-x-l" d="M88,118 L112,142 M112,118 L88,142" stroke="white" stroke-width="6" stroke-linecap="round" fill="none" style="display:none;"/>
+                <g id="pupil-group-l">
+                  <circle id="pupil-l" cx="100" cy="130" r="5" fill="black"/>
+                  <path id="pupil-spiral-l" d="M100,130 m0,-1.5 a2,2 0 1,1 -1,4 a4,4 0 1,1 2,-8 a6,6 0 0,1 -2,12 a8,8 0 0,1 2,-16" stroke="black" stroke-width="1.5" fill="none" style="display:none;"/>
+                </g>
+
+                <!-- Right Eye -->
+                <ellipse id="eye-bg-r" cx="160" cy="130" rx="14" ry="14" fill="white"/>
+                <path id="eye-x-r" d="M148,118 L172,142 M172,118 L148,142" stroke="white" stroke-width="6" stroke-linecap="round" fill="none" style="display:none;"/>
+                <g id="pupil-group-r">
+                  <circle id="pupil-r" cx="160" cy="130" r="5" fill="black"/>
+                  <path id="pupil-spiral-r" d="M160,130 m0,-1.5 a2,2 0 1,1 -1,4 a4,4 0 1,1 2,-8 a6,6 0 0,1 -2,12 a8,8 0 0,1 2,-16" stroke="black" stroke-width="1.5" fill="none" style="display:none;"/>
+                </g>
+
+                <!-- Eyebrows -->
+                <rect id="brow-l" x="87" y="105" width="26" height="6" rx="3" fill="#111" style="transform-origin: 100px 108px;" />
+                <rect id="brow-r" x="147" y="105" width="26" height="6" rx="3" fill="#111" style="transform-origin: 160px 108px;" />
+
+                <!-- Mouth -->
+                <path id="mouth" d="M 110 155 Q 130 185 150 155" stroke="#111" stroke-width="5" stroke-linecap="round" fill="none" />
+                <path id="mouth-wavy" d="M 115 168 Q 120 160 125 168 T 135 168 T 145 168" stroke="#111" stroke-width="4" stroke-linecap="round" fill="none" style="display:none;" />
+              </g>
               <!-- Gloss overlay -->
               <circle cx="130" cy="130" r="122" fill="url(#gloss)" />
               <circle cx="130" cy="130" r="122" fill="url(#shadow)" />

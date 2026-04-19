@@ -32,6 +32,24 @@ const cloudGroup = document.getElementById('cloud-group');
 const runSimBtn  = document.getElementById('run-sim-btn');
 const realtimePopEl = document.getElementById('realtime-pop');
 
+// Face elements
+const cheekL     = document.getElementById('cheek-l');
+const cheekR     = document.getElementById('cheek-r');
+const eyeBgL     = document.getElementById('eye-bg-l');
+const eyeBgR     = document.getElementById('eye-bg-r');
+const eyeXL      = document.getElementById('eye-x-l');
+const eyeXR      = document.getElementById('eye-x-r');
+const pupilL     = document.getElementById('pupil-l');
+const pupilR     = document.getElementById('pupil-r');
+const pupilSpiralL = document.getElementById('pupil-spiral-l');
+const pupilSpiralR = document.getElementById('pupil-spiral-r');
+const pupilGrpL  = document.getElementById('pupil-group-l');
+const pupilGrpR  = document.getElementById('pupil-group-r');
+const browL      = document.getElementById('brow-l');
+const browR      = document.getElementById('brow-r');
+const mouth      = document.getElementById('mouth');
+const mouthWavy  = document.getElementById('mouth-wavy');
+
 let totalPop = 8200000000;
 
 const CONTINENTS = [
@@ -178,6 +196,12 @@ function drawFrame() {
   totalPop += frameRate;
   realtimePopEl.textContent = Math.floor(totalPop).toLocaleString();
 
+  // Animate pupils drift
+  const driftX = Math.sin(rotOff * 0.05) * 3;
+  const driftY = Math.cos(rotOff * 0.07) * 3;
+  pupilGrpL.setAttribute('transform', `translate(${driftX}, ${driftY})`);
+  pupilGrpR.setAttribute('transform', `translate(${driftX}, ${driftY})`);
+
   animId = requestAnimationFrame(drawFrame);
 }
 
@@ -305,6 +329,114 @@ function update() {
   statusLabel.textContent = cond.label;
   statusLabel.style.color = cond.color;
 
+  // Face expressions based on score
+  // Cheeks
+  if (score > 60) {
+    cheekL.setAttribute('fill', 'rgba(255,100,150,0.5)');
+    cheekR.setAttribute('fill', 'rgba(255,100,150,0.5)');
+    cheekL.style.display = 'block';
+    cheekR.style.display = 'block';
+  } else if (score >= 45) {
+    cheekL.style.display = 'none';
+    cheekR.style.display = 'none';
+  } else {
+    cheekL.setAttribute('fill', 'rgba(150,150,150,0.5)');
+    cheekR.setAttribute('fill', 'rgba(150,150,150,0.5)');
+    cheekL.style.display = 'block';
+    cheekR.style.display = 'block';
+  }
+
+  // Eyes and Pupils
+  if (score > 75) {
+    eyeBgL.setAttribute('ry', '14');
+    eyeBgR.setAttribute('ry', '14');
+    eyeBgL.style.display = 'block';
+    eyeBgR.style.display = 'block';
+    eyeXL.style.display = 'none';
+    eyeXR.style.display = 'none';
+    
+    pupilL.setAttribute('r', '5');
+    pupilR.setAttribute('r', '5');
+    pupilL.style.display = 'block';
+    pupilR.style.display = 'block';
+    pupilSpiralL.style.display = 'none';
+    pupilSpiralR.style.display = 'none';
+  } else if (score >= 45) {
+    eyeBgL.setAttribute('ry', '8');
+    eyeBgR.setAttribute('ry', '8');
+    eyeBgL.style.display = 'block';
+    eyeBgR.style.display = 'block';
+    eyeXL.style.display = 'none';
+    eyeXR.style.display = 'none';
+
+    pupilL.setAttribute('r', '5');
+    pupilR.setAttribute('r', '5');
+    pupilL.style.display = 'block';
+    pupilR.style.display = 'block';
+    pupilSpiralL.style.display = 'none';
+    pupilSpiralR.style.display = 'none';
+  } else if (score >= 20) {
+    eyeBgL.setAttribute('ry', '4');
+    eyeBgR.setAttribute('ry', '4');
+    eyeBgL.style.display = 'block';
+    eyeBgR.style.display = 'block';
+    eyeXL.style.display = 'none';
+    eyeXR.style.display = 'none';
+
+    pupilL.setAttribute('r', '3');
+    pupilR.setAttribute('r', '3');
+    pupilL.style.display = 'block';
+    pupilR.style.display = 'block';
+    pupilSpiralL.style.display = 'none';
+    pupilSpiralR.style.display = 'none';
+  } else {
+    eyeBgL.style.display = 'none';
+    eyeBgR.style.display = 'none';
+    eyeXL.style.display = 'block';
+    eyeXR.style.display = 'block';
+
+    pupilL.style.display = 'none';
+    pupilR.style.display = 'none';
+    pupilSpiralL.style.display = 'block';
+    pupilSpiralR.style.display = 'block';
+  }
+
+  // Eyebrows
+  if (score > 75) {
+    browL.style.transform = 'translateY(0) rotate(0deg)';
+    browR.style.transform = 'translateY(0) rotate(0deg)';
+  } else if (score >= 45) {
+    browL.style.transform = 'translateY(0) rotate(10deg)';
+    browR.style.transform = 'translateY(0) rotate(-10deg)';
+  } else {
+    browL.style.transform = 'translateY(6px) rotate(20deg)';
+    browR.style.transform = 'translateY(6px) rotate(-20deg)';
+  }
+
+  // Mouth
+  if (score >= 30) {
+    mouth.style.display = 'block';
+    mouthWavy.style.display = 'none';
+    if (score > 75) {
+      mouth.setAttribute('d', 'M 110 155 Q 130 185 150 155');
+    } else if (score >= 60) {
+      mouth.setAttribute('d', 'M 115 160 Q 130 172 145 160');
+    } else if (score >= 45) {
+      mouth.setAttribute('d', 'M 115 165 Q 130 165 145 165');
+    } else {
+      mouth.setAttribute('d', 'M 115 170 Q 130 160 145 170');
+    }
+  } else {
+    mouth.style.display = 'none';
+    mouthWavy.style.display = 'block';
+  }
+
+  if (score < 20) {
+    mouthWavy.classList.add('wobbling-mouth');
+  } else {
+    mouthWavy.classList.remove('wobbling-mouth');
+  }
+
   const events = getEvents();
   eventBox.textContent  = events;
   eventBox.className    = 'event-box' + (score < 45 ? ' danger' : '');
@@ -420,3 +552,72 @@ function closeSimulation() {
 
 update();
 drawFrame();
+
+// Earth Day Banner
+function initEarthDayBanner() {
+  const titleStr = "Happy Earth Day";
+  const titleEl = document.getElementById('ed-title');
+  if (titleEl) {
+    let html = '';
+    for (let i = 0; i < titleStr.length; i++) {
+      if (titleStr[i] === ' ') {
+        html += `<div style="flex-basis: 100%; height: 8px;"></div>`;
+      } else {
+        html += `<span style="animation-delay: ${i * 0.05}s">${titleStr[i]}</span>`;
+      }
+    }
+    html += `<div style="flex-basis: 100%; height: 8px;"></div>`;
+    html += `<span class="ed-emoji" style="animation-delay: ${titleStr.length * 0.05}s">🌍</span>`;
+    titleEl.innerHTML = html;
+
+    setTimeout(triggerConfetti, titleStr.length * 50 + 500); // trigger after letters land
+  }
+}
+
+function triggerConfetti() {
+  const container = document.getElementById('ed-confetti-container');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  const colors = ['#3ecf70', '#50a0ff', '#ffffff'];
+  const NUM_PARTICLES = 60;
+  
+  for (let i = 0; i < NUM_PARTICLES; i++) {
+    const isCircle = Math.random() > 0.5;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const size = Math.random() * 8 + 4;
+    
+    // Spread confetti randomly across the banner's area and fall
+    const tx = (Math.random() - 0.5) * 800; // X spread
+    const ty = (Math.random() - 0.5) * 200 + 80; // Y spread (bias down)
+    const rot = (Math.random() - 0.5) * 720;
+    
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("class", "confetti-particle");
+    svg.setAttribute("width", size);
+    svg.setAttribute("height", size);
+    svg.style.setProperty('--tx', `calc(-50% + ${tx}px)`);
+    svg.style.setProperty('--ty', `calc(-50% + ${ty}px)`);
+    svg.style.setProperty('--rot', `${rot}deg`);
+    
+    if (isCircle) {
+      const circle = document.createElementNS(svgNS, "circle");
+      circle.setAttribute("cx", size/2);
+      circle.setAttribute("cy", size/2);
+      circle.setAttribute("r", size/2);
+      circle.setAttribute("fill", color);
+      svg.appendChild(circle);
+    } else {
+      const rect = document.createElementNS(svgNS, "rect");
+      rect.setAttribute("width", size);
+      rect.setAttribute("height", size);
+      rect.setAttribute("fill", color);
+      svg.appendChild(rect);
+    }
+    
+    container.appendChild(svg);
+  }
+}
+
+initEarthDayBanner();
