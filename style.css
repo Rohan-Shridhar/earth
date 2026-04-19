@@ -613,3 +613,14 @@ input[type="range"]::-moz-range-thumb {
   }
 }
 
+@keyframes slideSweat {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(6px); opacity: 0; }
+}
+
+.moon-sweat {
+  animation: slideSweat 2s infinite linear;
+}
+

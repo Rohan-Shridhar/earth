@@ -84,6 +84,7 @@ const CLOUDS = [
 ];
 
 let rotOff = 0;
+let moonAngle = 0;
 let animId  = null;
 
 function getLandColor(temp, forest, poll) {
@@ -201,6 +202,45 @@ function drawFrame() {
   const driftY = Math.cos(rotOff * 0.07) * 3;
   pupilGrpL.setAttribute('transform', `translate(${driftX}, ${driftY})`);
   pupilGrpR.setAttribute('transform', `translate(${driftX}, ${driftY})`);
+
+  // Animate Moon Orbit
+  moonAngle += (Math.PI * 2) / 360; // 6 seconds at ~60fps
+  const rx = 155;
+  const ry = 45;
+  const moonX = 130 + rx * Math.cos(moonAngle);
+  const moonY = 130 + ry * Math.sin(moonAngle);
+  
+  const moonGroup = document.getElementById('moon-group');
+  if (moonGroup) {
+      // Small math to offset the pupil away from earth
+      const moonPupilL = document.getElementById('moon-pupil-l');
+      const moonPupilR = document.getElementById('moon-pupil-r');
+      if (moonPupilL && moonPupilR) {
+        // earth is at 130, 130. Moon is at moonX, moonY. Vector to outside is (moonX-130, moonY-130).
+        const px = Math.sign(moonX - 130);
+        moonPupilL.setAttribute('cx', -6 + px);
+        moonPupilR.setAttribute('cx', 6 + px);
+      }
+
+      moonGroup.setAttribute('transform', `translate(${moonX}, ${moonY})`);
+      const ocean = document.getElementById('ocean');
+      
+      if (moonY > 130) {
+          // Front half: Place after fire-group
+          const fireGrp = document.getElementById('fire-group');
+          // Since face-group is after fire-group, we can insert before gloss layer (after face-group)
+          // easiest is just appendChild, SVG renders it on top! 
+          // but we still want it below gloss overlay ideally. Let's just append to end of globeSvg.
+          if (globeSvg.lastElementChild !== moonGroup) {
+              globeSvg.appendChild(moonGroup);
+          }
+      } else {
+          // Behind half: Place before ocean layer
+          if (ocean && ocean.previousElementSibling !== moonGroup) {
+              globeSvg.insertBefore(moonGroup, ocean);
+          }
+      }
+  }
 
   animId = requestAnimationFrame(drawFrame);
 }
@@ -435,6 +475,64 @@ function update() {
     mouthWavy.classList.add('wobbling-mouth');
   } else {
     mouthWavy.classList.remove('wobbling-mouth');
+  }
+
+  // Moon Face Updates
+  const moonEyeBgL = document.getElementById('moon-eye-bg-l');
+  const moonEyeBgR = document.getElementById('moon-eye-bg-r');
+  const moonPupilL = document.getElementById('moon-pupil-l');
+  const moonPupilR = document.getElementById('moon-pupil-r');
+  const moonBrowL  = document.getElementById('moon-brow-l');
+  const moonBrowR  = document.getElementById('moon-brow-r');
+  const moonMouth  = document.getElementById('moon-mouth');
+  const moonMouthO = document.getElementById('moon-mouth-o');
+  const moonSweatL = document.getElementById('moon-sweat-l');
+  const moonSweatR = document.getElementById('moon-sweat-r');
+  const moonBase   = document.getElementById('moon-base');
+
+  if (moonBase) {
+    if (score > 75) {
+      moonEyeBgL.setAttribute('rx', '3'); moonEyeBgL.setAttribute('ry', '3');
+      moonEyeBgR.setAttribute('rx', '3'); moonEyeBgR.setAttribute('ry', '3');
+      moonPupilL.style.display = 'none'; moonPupilR.style.display = 'none';
+      moonBrowL.style.display = 'none'; moonBrowR.style.display = 'none';
+      moonMouth.setAttribute('d', 'M -4 2 Q 0 6 4 2'); // gentle smile
+      moonMouth.style.display = 'block'; moonMouthO.style.display = 'none';
+      moonSweatL.style.display = 'none'; moonSweatR.style.display = 'none';
+      moonBase.setAttribute('fill', '#d8d8d0');
+    } else if (score > 50) {
+      moonEyeBgL.setAttribute('rx', '3'); moonEyeBgL.setAttribute('ry', '2');
+      moonEyeBgR.setAttribute('rx', '3'); moonEyeBgR.setAttribute('ry', '2');
+      moonPupilL.style.display = 'none'; moonPupilR.style.display = 'none';
+      moonBrowL.style.display = 'block'; moonBrowR.style.display = 'block';
+      moonBrowL.setAttribute('d', 'M -10 -7 Q -6 -6 -2 -7'); 
+      moonBrowR.setAttribute('d', 'M 2 -7 Q 6 -6 10 -7');
+      moonMouth.setAttribute('d', 'M -4 4 Q 0 4 4 4'); // flat mouth
+      moonMouth.style.display = 'block'; moonMouthO.style.display = 'none';
+      moonSweatL.style.display = 'none'; moonSweatR.style.display = 'none';
+      moonBase.setAttribute('fill', '#d8d8d0');
+    } else if (score > 25) {
+      moonEyeBgL.setAttribute('rx', '3'); moonEyeBgL.setAttribute('ry', '1.5');
+      moonEyeBgR.setAttribute('rx', '3'); moonEyeBgR.setAttribute('ry', '1.5');
+      moonPupilL.style.display = 'none'; moonPupilR.style.display = 'none';
+      moonBrowL.style.display = 'block'; moonBrowR.style.display = 'block';
+      moonBrowL.setAttribute('d', 'M -10 -9 Q -6 -5 -2 -9');
+      moonBrowR.setAttribute('d', 'M 2 -9 Q 6 -5 10 -9');
+      moonMouth.setAttribute('d', 'M -4 6 Q 0 3 4 6'); // worried frown
+      moonMouth.style.display = 'block'; moonMouthO.style.display = 'none';
+      moonSweatL.style.display = 'none'; moonSweatR.style.display = 'block';
+      moonBase.setAttribute('fill', '#d8d8d0');
+    } else {
+      moonEyeBgL.setAttribute('rx', '4'); moonEyeBgL.setAttribute('ry', '4');
+      moonEyeBgR.setAttribute('rx', '4'); moonEyeBgR.setAttribute('ry', '4');
+      moonPupilL.style.display = 'block'; moonPupilR.style.display = 'block';
+      moonBrowL.style.display = 'block'; moonBrowR.style.display = 'block';
+      moonBrowL.setAttribute('d', 'M -10 -11 Q -6 -13 -2 -11');
+      moonBrowR.setAttribute('d', 'M 2 -11 Q 6 -13 10 -11');
+      moonMouth.style.display = 'none'; moonMouthO.style.display = 'block';
+      moonSweatL.style.display = 'block'; moonSweatR.style.display = 'block';
+      moonBase.setAttribute('fill', '#f0f0e8');
+    }
   }
 
   const events = getEvents();

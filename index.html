@@ -49,6 +49,34 @@
                   <stop offset="100%" stop-color="rgba(0,0,0,0.4)" />
                 </radialGradient>
               </defs>
+              
+              <!-- Moon Group -->
+              <g id="moon-group">
+                <circle id="moon-base" cx="0" cy="0" r="28" fill="#d8d8d0" />
+                <ellipse cx="-8" cy="-10" rx="4" ry="3" fill="#b0b0a8" />
+                <ellipse cx="12" cy="4" rx="6" ry="4" fill="#b0b0a8" />
+                <ellipse cx="-10" cy="12" rx="3" ry="2" fill="#b0b0a8" />
+                <ellipse cx="5" cy="-15" rx="2" ry="1.5" fill="#b0b0a8" />
+                <path id="moon-shadow" d="M 0 -28 A 28 28 0 0 0 0 28 A 12 28 0 0 0 0 -28" fill="rgba(0,0,0,0.12)" />
+
+                <g id="moon-face">
+                  <g id="moon-eye-l">
+                    <ellipse id="moon-eye-bg-l" cx="-6" cy="-2" rx="3" ry="3" fill="#333" />
+                    <circle id="moon-pupil-l" cx="-7" cy="-2" r="1" fill="#fff" style="display:none;" />
+                  </g>
+                  <g id="moon-eye-r">
+                    <ellipse id="moon-eye-bg-r" cx="6" cy="-2" rx="3" ry="3" fill="#333" />
+                    <circle id="moon-pupil-r" cx="7" cy="-2" r="1" fill="#fff" style="display:none;" />
+                  </g>
+                  <path id="moon-brow-l" d="M -10 -8 Q -6 -10 -2 -8" stroke="#333" stroke-width="1.5" fill="none" style="display:none;" />
+                  <path id="moon-brow-r" d="M 2 -8 Q 6 -10 10 -8" stroke="#333" stroke-width="1.5" fill="none" style="display:none;" />
+                  <path id="moon-mouth" d="M -4 4 Q 0 8 4 4" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round" />
+                  <circle id="moon-mouth-o" cx="0" cy="5" r="2.5" fill="#333" style="display:none;" />
+                  <path id="moon-sweat-l" class="moon-sweat" d="M -16 -12 Q -18 -8 -16 -6 Q -14 -8 -16 -12" fill="#a0d0ff" style="display:none;" />
+                  <path id="moon-sweat-r" class="moon-sweat" d="M 14 -12 Q 12 -8 14 -6 Q 16 -8 14 -12" fill="#a0d0ff" style="display:none;" />
+                </g>
+              </g>
+
               <!-- Ocean base -->
               <circle id="ocean" cx="130" cy="130" r="122" />
               <!-- Atmosphere glow ring -->
