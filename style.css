@@ -111,6 +111,7 @@ body::before {
   height: 260px;
   filter: drop-shadow(0 0 30px rgba(40,120,220,0.35));
   transition: filter 0.8s;
+  overflow: visible;
 }
 
 .pulse-ring {
